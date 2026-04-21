@@ -41,3 +41,19 @@
           - name: GigabitEthernet4    
             description: "LAN Admin"
             enabled: true
+    
+
+    - name: Suppression du pool DHCP existant 
+      cisco.ios.ios_config:
+        lines:
+          - no ip dhcp pool POOL_ENTREPRISE
+
+    - name: Création du nouveau pool DHCP
+      cisco.ios.ios_config:
+        # La commande parente qui ouvre le sous-menu 
+        parents: ip dhcp pool POOL_ENTREPRISE
+        lines:
+          # Ici, on met les commandes EXACTES du terminal Cisco 
+          - network 192.168.2.0 255.255.255.0
+          - default-router 192.168.2.1
+          - dns-server 8.8.8.8
