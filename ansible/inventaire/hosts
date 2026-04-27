@@ -1,5 +1,5 @@
 [routeur]
-csr1000 ansible_host=10.205.252.11
+csr1000 ansible_host=161.3.40.78
 [routeur]
 csr1001 ansible_host=161.3.60.10
 [routeur]

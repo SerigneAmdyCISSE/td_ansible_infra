@@ -57,3 +57,38 @@
           - network 192.168.2.0 255.255.255.0
           - default-router 192.168.2.1
           - dns-server 8.8.8.8
+    
+    - name: Configuration du NAT Outside (Interface WAN)
+      cisco.ios.ios_config:
+        parents: "interface GigabitEthernet1"
+        lines:
+          - ip nat outside
+
+    - name: Configuration du NAT Inside (Interfaces LAN) via une boucle
+      cisco.ios.ios_config:
+        parents: "interface {{ item }}"
+        lines:
+          - ip nat inside
+      loop:
+        # À toi de lister tes 3 interfaces "inside" ici !
+        - GigabitEthernet2
+        - GigabitEthernet3
+        - GigabitEthernet4
+        
+    - name: Création de l'ACL 1 pour autoriser les réseaux internes
+      cisco.ios.ios_config:
+        lines:
+          # {{ item }} sera remplacé par chaque adresse IP de la boucle
+          - "access-list 1 permit {{ item }} 0.0.0.255"
+      loop:
+        - 192.168.2.0  # Le réseau LAN Entreprise
+        #  du réseau LAN DMZ
+        - 192.168.3.0
+        #  réseau LAN Admin
+        - 192.168.4.0
+
+    - name: Activation globale du PAT (Surcharge NAT)
+      cisco.ios.ios_config:
+        lines:
+          # La commande qui lie l'ACL 1 à l'interface WAN G1
+          - ip nat inside source list 1 interface GigabitEthernet1 overload
