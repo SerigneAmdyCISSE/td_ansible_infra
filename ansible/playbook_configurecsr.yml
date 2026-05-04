@@ -98,7 +98,7 @@
         lines:
           # Redirection pour le Serveur Web (Port 80 -> Port 80)
          - ip nat inside source static tcp 192.168.3.2 80 interface GigabitEthernet1 80
-          # Redirection pour le Serveur SSH Admin (Port 2222 -> Port 22)
+          # Redirection pour le Serveur SSH Admin (Port 22 -> Port 2222)
          - ip nat inside source static tcp 192.168.4.2 22 interface GigabitEthernet1 2222 
 
          
